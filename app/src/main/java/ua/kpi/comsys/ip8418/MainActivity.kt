@@ -1,48 +1,49 @@
 package ua.kpi.comsys.ip8418
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import ua.kpi.comsys.ip8418.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, HomeFragment())
-            .commitNow()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val tab_home = findViewById<LinearLayout>(R.id.tab_home)
-        val tab_home_text = findViewById<TextView>(R.id.tab_home_text)
-        val tab_home_img = findViewById<ImageView>(R.id.tab_home_img)
-        val tab_author = findViewById<LinearLayout>(R.id.tab_author)
-        val tab_author_text = findViewById<TextView>(R.id.tab_author_text)
-        val tab_author_img = findViewById<ImageView>(R.id.tab_author_img)
+        with(binding) {
+            pager.adapter = object : FragmentStateAdapter(this@MainActivity) {
+                override fun getItemCount(): Int = 2
 
-        tab_home.setOnClickListener {
-            changeFragment(HomeFragment())
-            tab_home_text.setTextColor(Color.BLUE)
-            tab_author_text.setTextColor(Color.BLACK)
-            tab_home_img.setColorFilter(Color.BLUE)
-            tab_author_img.setColorFilter(Color.BLACK)
+                override fun createFragment(position: Int) = when (position) {
+                    0 -> HomeFragment()
+                    1 -> AuthorFragment()
+                    else -> error("Not supported")
+                }
+            }
+
+            pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+
+                    navigation.selectedItemId = when (position) {
+                        0 -> R.id.menu_home
+                        1 -> R.id.menu_author
+                        else -> error("No page here.")
+                    }
+                }
+            })
+
+            navigation.setOnNavigationItemSelectedListener {
+                when (it.itemId) {
+                    R.id.menu_home -> pager.currentItem = 0
+                    R.id.menu_author -> pager.currentItem = 1
+                }
+                true
+            }
         }
-
-        tab_author.setOnClickListener {
-            changeFragment(AuthorFragment())
-            tab_home_text.setTextColor(Color.BLACK)
-            tab_author_text.setTextColor(Color.BLUE)
-            tab_home_img.setColorFilter(Color.BLACK)
-            tab_author_img.setColorFilter(Color.BLUE)
-        }
-    }
-
-    private fun changeFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .commit()
     }
 }
