@@ -1,6 +1,5 @@
 package ua.kpi.comsys.lab12
 
-import java.text.SimpleDateFormat
 import java.util.*
 
 // Частина 1
@@ -87,32 +86,79 @@ class TimeVR (hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
         val hh = when (h) {
             in 0..9 -> "0$h"
             in 10..12 -> "$h"
-            else -> "0${h - 12}"
+            in 13..21 -> "0${h - 12}"
+            else -> "${h - 12}"
         }
         val mm = if (m >= 10) "$m" else "0$m"
         val ss = if (s >= 10) "$s" else "0$s"
         val zz = if (h > 12) "PM" else "AM"
         return "$hh:$mm:$ss $zz"
     }
+
+    operator fun plus(obj: TimeVR): TimeVR {
+        var sumH = this.h + obj.h
+        var sumM = this.m + obj.m
+        var sumS = this.s + obj.s
+
+        if (sumS >= 60) {
+            sumM += 1
+            sumS -= 60
+        }
+        if (sumM >= 60) {
+            sumH += 1
+            sumM -= 60
+        }
+        if (sumH >= 24) { sumH -= 24 }
+        return TimeVR(sumH, sumM, sumS)
+    }
+
+    operator fun minus(obj: TimeVR): TimeVR {
+        var defH = this.h - obj.h
+        var defM = this.m - obj.m
+        var defS = this.s - obj.s
+
+        if (defS < 0) {
+            defM -= 1
+            defS += 60
+        }
+        if (defM < 0) {
+            defH -= 1
+            defM += 60
+        }
+        if (defH < 0) { defH += 24 }
+        return TimeVR(defH, defM, defS)
+    }
+
+    companion object {
+        fun sum(obj1: TimeVR, obj2: TimeVR) = obj1 + obj2
+
+        fun def(obj1: TimeVR, obj2: TimeVR) = obj1 - obj2
+    }
 }
 
 fun main() {
-//    println("Завдання 1")
-//    val studentsGroups = task1(studentsStr)
-//    println(studentsGroups)
-//    println("Завдання 2")
-//    val studentPoints = task2(studentsGroups)
-//    println(studentPoints)
-//    println("Завдання 3")
-//    val sumPoints = task3(studentPoints)
-//    println(sumPoints)
-//    println("Завдання 4")
-//    val groupAvg = task4(sumPoints)
-//    println(groupAvg)
-//    println("Завдання 5")
-//    val passedPerGroup = task5(sumPoints)
-//    println(passedPerGroup)
-//    println("Частина 2")
-    val obj = TimeVR(20,20,30)
-    println(obj)
+    println("Завдання 1")
+    val studentsGroups = task1(studentsStr)
+    println(studentsGroups)
+    println("Завдання 2")
+    val studentPoints = task2(studentsGroups)
+    println(studentPoints)
+    println("Завдання 3")
+    val sumPoints = task3(studentPoints)
+    println(sumPoints)
+    println("Завдання 4")
+    val groupAvg = task4(sumPoints)
+    println(groupAvg)
+    println("Завдання 5")
+    val passedPerGroup = task5(sumPoints)
+    println(passedPerGroup)
+    println("Частина 2")
+    val obj1 = TimeVR(23,59,59)
+    val obj2 = TimeVR(12, 0, 1)
+    val obj3 = TimeVR(Date(0,0,0,0,0,0))
+    val obj4 = TimeVR(Date(0,0,0,0,0,1))
+    println("$obj1 + $obj2 = ${obj1 + obj2}")
+    println(TimeVR.sum(obj1, obj2))
+    println("$obj3 - $obj4 = ${obj3 - obj4}")
+    println(TimeVR.def(obj3, obj4))
 }
