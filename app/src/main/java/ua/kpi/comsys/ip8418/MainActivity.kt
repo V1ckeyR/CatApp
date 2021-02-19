@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
                 override fun getItemCount(): Int = 2
 
                 override fun createFragment(position: Int) = when (position) {
-                    0 -> HomeFragment()
+                    0 -> DrawingFragment()
                     1 -> AuthorFragment()
                     else -> error("Not supported")
                 }
