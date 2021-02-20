@@ -1,4 +1,4 @@
-package ua.kpi.comsys.ip8418
+package ua.kpi.comsys.ip8418.drawing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import ua.kpi.comsys.ip8418.R
 import ua.kpi.comsys.ip8418.databinding.FragmentDrawingBinding
 
 class DrawingFragment : Fragment() {

@@ -1,4 +1,4 @@
-package ua.kpi.comsys.ip8418
+package ua.kpi.comsys.ip8418.drawing
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import ua.kpi.comsys.ip8418.R
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin

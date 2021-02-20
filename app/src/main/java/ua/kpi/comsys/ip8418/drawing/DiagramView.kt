@@ -1,4 +1,4 @@
-package ua.kpi.comsys.ip8418
+package ua.kpi.comsys.ip8418.drawing
 
 import android.annotation.SuppressLint
 import android.R

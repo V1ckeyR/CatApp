@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import ua.kpi.comsys.ip8418.databinding.ActivityMainBinding
+import ua.kpi.comsys.ip8418.drawing.DrawingFragment
+import ua.kpi.comsys.ip8418.movies.MoviesFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -16,11 +18,12 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             pager.adapter = object : FragmentStateAdapter(this@MainActivity) {
-                override fun getItemCount(): Int = 2
+                override fun getItemCount(): Int = 3
 
                 override fun createFragment(position: Int) = when (position) {
-                    0 -> DrawingFragment()
-                    1 -> AuthorFragment()
+                    0 -> MoviesFragment()
+                    1 -> DrawingFragment()
+                    2 -> AuthorFragment()
                     else -> error("Not supported")
                 }
             }
@@ -30,8 +33,9 @@ class MainActivity : AppCompatActivity() {
                     super.onPageSelected(position)
 
                     navigation.selectedItemId = when (position) {
-                        0 -> R.id.menu_home
-                        1 -> R.id.menu_author
+                        0 -> R.id.menu_movies
+                        1 -> R.id.menu_drawing
+                        2 -> R.id.menu_author
                         else -> error("No page here.")
                     }
                 }
@@ -39,8 +43,9 @@ class MainActivity : AppCompatActivity() {
 
             navigation.setOnNavigationItemSelectedListener {
                 when (it.itemId) {
-                    R.id.menu_home -> pager.currentItem = 0
-                    R.id.menu_author -> pager.currentItem = 1
+                    R.id.menu_movies -> pager.currentItem = 0
+                    R.id.menu_drawing -> pager.currentItem = 1
+                    R.id.menu_author -> pager.currentItem = 2
                 }
                 true
             }

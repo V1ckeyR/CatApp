@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/darker_gray">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/materialButtonToggleGroup"
@@ -31,18 +30,18 @@
             android:text="@string/diagram" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <ua.kpi.comsys.ip8418.GraphicView
+    <ua.kpi.comsys.ip8418.drawing.GraphicView
         android:id="@+id/graphic"
         android:layout_width="350dp"
         android:layout_height="350dp"
         android:layout_margin="30dp"
-        app:graphColor="@color/purple_500"
         android:visibility="visible"
+        app:graphColor="@color/purple_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialButtonToggleGroup" />
 
-    <ua.kpi.comsys.ip8418.DiagramView
+    <ua.kpi.comsys.ip8418.drawing.DiagramView
         android:id="@+id/diagram"
         android:layout_width="350dp"
         android:layout_height="350dp"
