@@ -6,10 +6,16 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import ua.kpi.comsys.ip8418.databinding.ActivityMainBinding
 import ua.kpi.comsys.ip8418.drawing.DrawingFragment
+import ua.kpi.comsys.ip8418.movies.Container
 import ua.kpi.comsys.ip8418.movies.MoviesFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private var onBack: (() -> Unit)? = null
+
+    fun setOnBack(f: () -> Unit) {
+        onBack = f
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +27,14 @@ class MainActivity : AppCompatActivity() {
                 override fun getItemCount(): Int = 3
 
                 override fun createFragment(position: Int) = when (position) {
-                    0 -> MoviesFragment()
+                    0 -> Container()
                     1 -> DrawingFragment()
                     2 -> AuthorFragment()
                     else -> error("Not supported")
                 }
             }
+
+            pager.isUserInputEnabled = false
 
             pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -49,6 +57,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (onBack == null) {
+            super.onBackPressed()
+        } else {
+            onBack?.invoke()
+            onBack = null
         }
     }
 }
