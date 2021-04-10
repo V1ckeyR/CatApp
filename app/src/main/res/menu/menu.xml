@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_images"
+        app:showAsAction="ifRoom"
+        android:title="@string/images"
+        android:icon="@drawable/ic_images"/>
+    <item
         android:id="@+id/menu_movies"
         app:showAsAction="ifRoom"
         android:title="@string/movies"
