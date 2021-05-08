@@ -15,23 +15,14 @@
             android:id="@+id/search_movie"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:background="@drawable/navigation_shape"
             android:hint="@string/search"
             android:inputType="text"
             android:paddingHorizontal="15dp"
             android:paddingVertical="5dp"
             android:textColor="@android:color/darker_gray" />
-
-        <ImageView
-            android:id="@+id/add_movie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:padding="5dp"
-            android:src="@drawable/ic_baseline_add" />
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

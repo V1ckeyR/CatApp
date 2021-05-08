@@ -13,23 +13,31 @@ data class Movie(
         @SerialName("imdbID")
         val imdbID: String? = null,
         @SerialName("Poster")
-        val poster: String? = null
+        val poster: String? = null,
 )
 
 @Serializable
-data class Search(
+data class MovieResponse(
+        @SerialName("Response")
+        val response: String,
         @SerialName("Search")
-        val movies: List<Movie>
+        val movies: List<Movie>? = null,
+        @SerialName("Error")
+        val error: String? = null,
 )
 
 @Serializable
 data class MovieInfo(
+        @SerialName("Response")
+        val response: String,
+        @SerialName("Error")
+        val error: String? = null,
         @SerialName("Title")
-        val title: String?,
+        val title: String? = null,
         @SerialName("Year")
-        val year: String?,
+        val year: String? = null,
         @SerialName("Poster")
-        val poster: String?,
+        val poster: String? = null,
         @SerialName("Rated")
         val rated: String? = null,
         @SerialName("Released")

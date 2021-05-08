@@ -1,19 +1,18 @@
 package ua.kpi.comsys.ip8418.movies
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.ExperimentalSerializationApi
+import ua.kpi.comsys.ip8418.R
 import ua.kpi.comsys.ip8418.databinding.FragmentMoviesBinding
-import java.io.IOException
 import java.util.*
 
 class MoviesFragment : Fragment() {
@@ -29,18 +28,16 @@ class MoviesFragment : Fragment() {
         return binding.root
     }
 
+    @ExperimentalSerializationApi
     private val vm by lazy { ViewModelProvider(requireActivity()).get(MovieViewModel::class.java) }
 
+    @ExperimentalSerializationApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (vm.movies.isEmpty()) {
-            val jsonString = getJsonDataFromAsset(requireContext(), "MoviesList.txt")
-            val search = Json.decodeFromString<Search>(jsonString!!)
-            vm.movies = search.movies.toMutableList()
-        }
+        binding.searchMovie.setText(vm.searchText)
 
-        val moviesAdapter = MoviesAdapter(vm.movies)
+        val moviesAdapter = MoviesAdapter(vm.movies.value ?: listOf())
 
         with(binding.movies) {
             adapter = moviesAdapter
@@ -48,57 +45,49 @@ class MoviesFragment : Fragment() {
         }
 
         moviesAdapter.setOnItemClicked {
-            val inString = getJsonDataFromAsset(requireContext(), "Movies/${it.imdbID}.txt")
-            val movieInfo = if (inString == null) {
-                MovieInfo(it.title, it.year, it.poster)
+            val id = it.imdbID
+
+            if (id.isNullOrEmpty()) {
+                vm.movieInfo.value = MovieInfo(it.title, it.year, it.poster)
             } else {
-                Json { ignoreUnknownKeys = true }.decodeFromString(inString)
-            }
-            (parentFragment as? Container)?.showMovieInfo(movieInfo)
-        }
-
-        moviesAdapter.setOnItemDeleted {
-            vm.movies.remove(it)
-            binding.noMovie.isVisible = vm.movies.isNullOrEmpty()
-            binding.movies.isVisible = vm.movies.isNotEmpty()
-
-            val query = binding.searchMovie.text?.toString() ?: ""
-            if (query.isNotBlank()) {
-                val n = vm.movies.filter { movie ->
-                    movie.title
-                            .toLowerCase(Locale.ROOT)
-                            .contains(query.toLowerCase(Locale.ROOT))
-                }.size
-
-                binding.noMovie.isVisible = n == 0
-                binding.movies.isVisible = n != 0
+                vm.loadMovieInfo(id)
             }
         }
 
         with(binding) {
             searchMovie.addTextChangedListener {
-                val m = vm.movies.filter { movie ->
-                    movie.title
-                            .toLowerCase(Locale.ROOT)
-                            .contains(it?.toString()?.toLowerCase(Locale.ROOT) ?: "")
-                }
-                moviesAdapter.update(m.toMutableList())
-                noMovie.isVisible = m.isNullOrEmpty()
-                movies.isVisible = !m.isNullOrEmpty()
-            }
-            addMovie.setOnClickListener { (parentFragment as? Container)?.showMovieAdd() }
-        }
-    }
+                vm.searchText = it.toString()
 
-    private fun getJsonDataFromAsset(context: Context, fileName: String): String? {
-        val jsonString: String
-        try {
-            jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
-        } catch (ioException: IOException) {
-            ioException.printStackTrace()
-            return null
+                if ((it?.count() ?: 0) >= 3) {
+                    vm.loadMovies(it.toString())
+                } else {
+                    moviesAdapter.update(listOf())
+                    movies.isVisible = false
+                    noMovie.isVisible = true
+                    noMovie.text = getString(R.string.keep_typing)
+                }
+            }
+
+            vm.movies.observe(viewLifecycleOwner) {
+                moviesAdapter.update(it)
+                noMovie.isVisible = it.isNullOrEmpty()
+                movies.isVisible = !it.isNullOrEmpty()
+            }
+
+            vm.error.observe(viewLifecycleOwner) {
+                noMovie.isVisible = true
+                noMovie.text = it
+            }
+
+            vm.movieInfo.observe(viewLifecycleOwner) {
+                if (it == null) return@observe
+                (parentFragment as? Container)?.showMovieInfo()
+            }
+
+            vm.MIError.observe(viewLifecycleOwner) {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
-        return jsonString
     }
 
     override fun onDestroy() {

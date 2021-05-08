@@ -1,16 +1,20 @@
 package ua.kpi.comsys.ip8418.images
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ua.kpi.comsys.ip8418.R
-import ua.kpi.comsys.ip8418.movies.Movie
 
-class ImagesAdapter(private var images: MutableList<Uri>) :
+class ImagesAdapter(private var images: List<Image>) :
         RecyclerView.Adapter<ImagesAdapter.ImageHolder>() {
+
+    fun update(newImages: List<Image>) {
+        images = newImages
+        notifyDataSetChanged()
+    }
 
     class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
         var image: ImageView? = itemView.findViewById(R.id.image)
@@ -25,6 +29,10 @@ class ImagesAdapter(private var images: MutableList<Uri>) :
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
-        holder.image?.setImageURI(images[position])
+        Picasso.get()
+                .load(images[position].webformatURL)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.ic_images)
+                .into(holder.image)
     }
 }

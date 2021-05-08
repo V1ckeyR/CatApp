@@ -1,8 +1,21 @@
 package ua.kpi.comsys.ip8418.images
 
-import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 
 class ImagesViewModel : ViewModel() {
-    var images = mutableListOf<Uri>()
+    var images = MutableLiveData<Hits>()
+
+    @ExperimentalSerializationApi
+    private val repository = ImagesRepository(ImagesRemoteDataSource(getImageApi()))
+
+    @ExperimentalSerializationApi
+    fun loadImages() {
+        viewModelScope.launch { images.postValue(repository.getImages()) }
+    }
+
+
 }

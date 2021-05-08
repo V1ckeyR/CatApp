@@ -36,14 +36,7 @@ class Container : Fragment() {
         changeFragment(MoviesFragment())
     }
 
-    private val vm by lazy { ViewModelProvider(requireActivity()).get(MovieViewModel::class.java) }
-
-    fun showMovieInfo(movieInfo: MovieInfo) {
-        vm.movieInfo = movieInfo
+    fun showMovieInfo() {
         changeFragment(MovieInfoFragment())
-    }
-
-    fun showMovieAdd() {
-        changeFragment(MovieAddFragment())
     }
 }
