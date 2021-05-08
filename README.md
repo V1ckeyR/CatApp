@@ -6,3 +6,4 @@
 * [Lab 3](https://github.com/V1ckeyR/CatApp/tree/f98b9d8fbe68266b0752cf028cad05a18dcb3945)
 * [Lab 4](https://github.com/V1ckeyR/CatApp/tree/d03ea9a8bc5a32d944b2efd3b5d98c534624b6d0)
 * [Lab 5](https://github.com/V1ckeyR/CatApp/tree/ad3b9ec5e04658a0936f9a2bb12d45ceec815153)
+* [Lab 6](https://github.com/V1ckeyR/CatApp/tree/98301fbd6e6e6386848b95174af1fdd40494d083)
