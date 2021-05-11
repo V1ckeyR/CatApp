@@ -13,6 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.serialization.ExperimentalSerializationApi
 import ua.kpi.comsys.ip8418.R
 import ua.kpi.comsys.ip8418.databinding.FragmentMoviesBinding
+import ua.kpi.comsys.ip8418.movies.data.MovieInfo
+import ua.kpi.comsys.ip8418.movies.data.MoviesRepository
+import ua.kpi.comsys.ip8418.movies.data.local.MovieDatabase
+import ua.kpi.comsys.ip8418.movies.data.local.MoviesLocalDataSource
+import ua.kpi.comsys.ip8418.movies.data.remote.MoviesRemoteDataSource
+import ua.kpi.comsys.ip8418.movies.data.remote.getMovieApi
 import java.util.*
 
 class MoviesFragment : Fragment() {
@@ -36,6 +42,11 @@ class MoviesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.searchMovie.setText(vm.searchText)
+
+        vm.repository = MoviesRepository(
+            MoviesRemoteDataSource(getMovieApi()),
+            MoviesLocalDataSource(MovieDatabase.getInstance(requireContext()))
+        )
 
         val moviesAdapter = MoviesAdapter(vm.movies.value ?: listOf())
 
@@ -69,6 +80,12 @@ class MoviesFragment : Fragment() {
             }
 
             vm.movies.observe(viewLifecycleOwner) {
+                if (it.isEmpty()) Toast.makeText(
+                    requireContext(),
+                    "Неможливо отримати дані для заданого запиту",
+                    Toast.LENGTH_SHORT
+                ).show()
+
                 moviesAdapter.update(it)
                 noMovie.isVisible = it.isNullOrEmpty()
                 movies.isVisible = !it.isNullOrEmpty()

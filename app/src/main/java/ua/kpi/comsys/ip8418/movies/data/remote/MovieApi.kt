@@ -1,4 +1,4 @@
-package ua.kpi.comsys.ip8418.movies
+package ua.kpi.comsys.ip8418.movies.data.remote
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -7,6 +7,8 @@ import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ua.kpi.comsys.ip8418.movies.data.MovieInfo
+import ua.kpi.comsys.ip8418.movies.data.MovieResponse
 
 interface MovieApi {
     @GET("/")

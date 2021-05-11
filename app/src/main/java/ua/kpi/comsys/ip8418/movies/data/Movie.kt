@@ -1,19 +1,21 @@
-package ua.kpi.comsys.ip8418.movies
+package ua.kpi.comsys.ip8418.movies.data
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Entity
 @Serializable
 data class Movie(
+        @PrimaryKey val imdbID: String,
         @SerialName("Title")
         val title: String,
         @SerialName("Year")
         val year: String,
         @SerialName("Type")
         val type: String,
-        @SerialName("imdbID")
-        val imdbID: String? = null,
         @SerialName("Poster")
-        val poster: String? = null,
+        val poster: String,
 )
 
 @Serializable

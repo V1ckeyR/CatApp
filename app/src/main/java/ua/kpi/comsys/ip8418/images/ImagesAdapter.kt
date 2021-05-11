@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ua.kpi.comsys.ip8418.R
+import ua.kpi.comsys.ip8418.images.data.Image
 
 class ImagesAdapter(private var images: List<Image>) :
         RecyclerView.Adapter<ImagesAdapter.ImageHolder>() {

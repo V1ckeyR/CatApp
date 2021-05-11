@@ -7,6 +7,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 class ImagesLayoutManager : RecyclerView.LayoutManager() {
+    private val size get() = width / 3
+    private var offset = 0
+
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
                 RecyclerView.LayoutParams.MATCH_PARENT,
@@ -48,7 +51,6 @@ class ImagesLayoutManager : RecyclerView.LayoutManager() {
         detachAndScrapAttachedViews(recycler)
 
         var position = 0
-        val size = width / 3
         var top = 0
         var bottom = 2 * size
         var left = 0
@@ -126,32 +128,36 @@ class ImagesLayoutManager : RecyclerView.LayoutManager() {
 
     override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
         val delta = scrollVerticallyInternal(dy)
+        offset -= delta
         offsetChildrenVertical(-delta)
         return delta
     }
 
     private fun scrollVerticallyInternal(dy: Int): Int {
-        if (childCount == 0) {
-            return 0
-        }
+        if (childCount == 0) return 0
 
-        val topView = getChildAt(0)
-        val bottomView = getChildAt(childCount - 1)
+        val topView = getChildAt(0)!!
+        val bottomView = getChildAt(childCount - 1)!!
 
-        val viewSpan = getDecoratedBottom(bottomView!!) - getDecoratedTop(topView!!)
+        val viewSpan = getDecoratedBottom(bottomView) - getDecoratedTop(topView)
         if (viewSpan <= height) return 0
 
-        var delta = 0
-        if (dy < 0) {
-            val firstView = getChildAt(0)
-            val firstViewPosition = getPosition(firstView!!)
-            delta = if (firstViewPosition > 0) dy else max(getDecoratedTop(firstView), dy)
-        } else if (dy > 0) {
-            val lastView = getChildAt(childCount - 1)
-            val lastViewPosition = getPosition(lastView!!)
-            delta = if (lastViewPosition < itemCount - 1) dy else min(getDecoratedBottom(lastView) - height, dy)
+        return if (dy < 0) { // scroll to top
+            val firstViewAdapterPos = getPosition(topView)
+            if (firstViewAdapterPos > 0) dy else max(getDecoratedTop(topView), dy)
+        } else { // scroll to bottom
+            val lastViewAdapterPos = getPosition(bottomView)
+            if (lastViewAdapterPos < itemCount - 1) {
+                dy
+            } else {
+                val pos = getPosition(bottomView) % 9
+                val h = getDecoratedBottom(bottomView) - height + when (pos) {
+                    1, 6 -> size // if has bigger cell before our last view, should be able to scroll one more cell
+                    else -> 0
+                }
+                min(h, dy)
+            }
         }
-        return delta
     }
 
 }

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ua.kpi.comsys.ip8418.R
+import ua.kpi.comsys.ip8418.movies.data.Movie
 
 class MoviesAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<MoviesAdapter.MovieHolder>() {
     private var onItemClicked: (Movie) -> Unit = {}
